@@ -14,7 +14,8 @@ LOCAL_SRC_FILES := $(call all-java-files-under, src)
 
 LOCAL_PACKAGE_NAME := Viper4Android
 
-LOCAL_OVERRIDES_PACKAGES := MusicFX
+LOCAL_OVERRIDES_PACKAGES := MusicFX \
+                            AudioFX
 
 include $(BUILD_PACKAGE)
 ##################################################
@@ -29,6 +30,7 @@ include $(CLEAR_VARS)
 LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := roottools:libs/RootTools-4.2.jar
 
 include $(BUILD_MULTI_PREBUILT)
+
 
 # Use the following include to make our test apk.
 include $(call all-makefiles-under,$(LOCAL_PATH))
