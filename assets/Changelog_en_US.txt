@@ -1,12 +1,12 @@
-﻿ViPER4Android FX v2.3.4.1
+﻿ViPER4Android FX v2.3.4.0
 Codename: Beautiful
 Copyright (C) 2006-2016 ViPER ACOUSTIC
 Forum: forum.vipersaudio.com
 
-Latest: v2.3.4.1
-1.The dark side
-2.Icon updates
-3.Sensor Rotation
+Latest: v2.3.4.0
+1.Fix bugs.
+2.Add customizable ViPER-DDC feature.
+3.Improve compatibility.
 4.Switches
 
 ===Attention===

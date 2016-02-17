@@ -1,35 +1,60 @@
+ifeq (1,$(strip $(shell expr $(PLATFORM_SDK_VERSION) \>= 14)))
+
 LOCAL_PATH:= $(call my-dir)
+
+#ViPER4Android
 include $(CLEAR_VARS)
 
 LOCAL_MODULE_TAGS := optional
-LOCAL_PRIVILEGED_MODULE := true
-
-LOCAL_PROGUARD_FLAG_FILES := proguard.flags
-
-LOCAL_STATIC_JAVA_LIBRARIES := android-support-v13
-LOCAL_STATIC_JAVA_LIBRARIES += roottools
-LOCAL_REQUIRED_MODULES := libV4AJniUtils
 
 LOCAL_SRC_FILES := $(call all-java-files-under, src)
 
-LOCAL_PACKAGE_NAME := Viper4Android
+#LOCAL_RESOURCE_DIR += $(LOCAL_PATH)/res
+LOCAL_AAPT_FLAGS := --auto-add-overlay
 
-LOCAL_OVERRIDES_PACKAGES := MusicFX
+LOCAL_PACKAGE_NAME := ViPER4Android
+LOCAL_CERTIFICATE := platform
+
+LOCAL_PROGUARD_FLAG_FILES := proguard.flags
+
+LOCAL_STATIC_JAVA_LIBRARIES := \
+    v4a_RootTools \
+    v4a_android-support
+
+ifeq (1,$(strip $(shell expr $(PLATFORM_SDK_VERSION) \>= 23)))
+LOCAL_STATIC_JAVA_LIBRARIES += \
+    org.apache.http.legacy
+endif
 
 include $(BUILD_PACKAGE)
-##################################################
-include $(CLEAR_VARS)
-LOCAL_MODULE := libV4AJniUtils
-LOCAL_SRC_FILES := libs/armeabi/libV4AJniUtils.so
-include $(PREBUILT_SHARED_LIBRARY)
 
-##################################################
+#libs
 include $(CLEAR_VARS)
 
-LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := roottools:libs/RootTools-4.2.jar
+LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := \
+    v4a_RootTools:libs/RootTools-4.2.jar \
+    v4a_android-support:libs/android-support-v13.jar
 
 include $(BUILD_MULTI_PREBUILT)
 
+#soundfx lib
+ifneq ($(filter NEON NEON_HQ NEON_SQ NOVFP VFP X86,$(VIPER4ANDROID_MODE)),)
 
-# Use the following include to make our test apk.
-include $(call all-makefiles-under,$(LOCAL_PATH))
+include $(CLEAR_VARS)
+
+ifeq (1,$(strip $(shell expr $(PLATFORM_SDK_VERSION) \>= 18)))
+    LOCAL_V4A_LIB := libv4a_fx_jb
+else
+    LOCAL_V4A_LIB := libv4a_fx_ics
+endif
+
+LOCAL_MODULE := libv4a_fx_ics
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_CLASS := SHARED_LIBRARIES
+LOCAL_MODULE_PATH := $(TARGET_OUT)/lib/soundfx
+LOCAL_MODULE_SUFFIX := .so
+LOCAL_SRC_FILES := assets/$(LOCAL_V4A_LIB)_$(VIPER4ANDROID_MODE).so
+include $(BUILD_PREBUILT)
+endif
+
+endif
